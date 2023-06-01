@@ -1,94 +1,264 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; //menggunakan dateformat
-import 'package:timer_builder/timer_builder.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-
-class KonversiWaktu extends StatefulWidget {
-  const KonversiWaktu({Key? key}) : super(key: key);
+class RecomendationSite extends StatefulWidget {
+  const RecomendationSite({Key? key}) : super(key: key);
 
   @override
-  State<KonversiWaktu> createState() => _KonversiWaktuState();
+  State<RecomendationSite> createState() => _RecomendationSiteState();
 }
 
-class _KonversiWaktuState extends State<KonversiWaktu> {
-
-  String getTime(){
-    var Date = DateTime.now();
-    return new DateFormat("HH : mm : ss").format(Date.toUtc().add(Duration(hours: hours)));
-  }
-
-  List<DropdownMenuItem<String>> get dropdownItems{
-    List<DropdownMenuItem<String>> zone = [
-      DropdownMenuItem(child: Text("WIB"),value: "WIB"),
-      DropdownMenuItem(child: Text("WITA"),value: "WITA"),
-      DropdownMenuItem(child: Text("WIT"),value: "WIT"),
-      DropdownMenuItem(child: Text("London"),value: "London"),
-    ];
-    return zone;
-  }
-
-  String selectedZone = "London";
-  int hours = 1;
+class _RecomendationSiteState extends State<RecomendationSite> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Time Converter"),
+      appBar: AppBar(
+        title: Text('Recomendation Sites'),
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/images/background.jpg"), fit: BoxFit.cover,)
         ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 100),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Container(
-                    child: Column(
+        child: Center(
+          child: ListView(
+            children: [
+              Container(
+                child: Column(
+                  children: [
+                    SizedBox(height:10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        TimerBuilder.periodic(Duration(seconds: 1), builder: (context) {
-                          print("${getTime()}");
-                          return Text(
-                            "${getTime()}  $selectedZone",
-                            style: TextStyle(
-                                color: Color(0xff2d386b),
-                                fontSize: 30,
-                                fontWeight: FontWeight.w700),
-                          );
-                        }),
-                      ],
-                    )
-                ),
-                Container(
-                    child: Column(
-                      children: [
-                        SizedBox(height: 20),
                         Container(
-                          child: DropdownButton(
-                              value: selectedZone,
-                              onChanged: (String? newZone) {
-                                setState(() {
-                                  selectedZone = newZone!;
-                                  if (selectedZone == "WIB") {
-                                    hours = 7;
-                                  } else if (selectedZone == "WITA") {
-                                    hours = 8;
-                                  } else if (selectedZone == "WIT") {
-                                    hours = 9;
-                                  } else {
-                                    hours = 1;
-                                  }
-                                });
-                              },
-                              items: dropdownItems
+                            width: 300,
+                            height: 50,
+                          decoration: BoxDecoration(
+                              color: Colors.grey,
+                              borderRadius: BorderRadius.circular(20)
                           ),
-                        )
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text("Illegal Sites", style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),),
+                              SizedBox(width:15),
+                              Icon(Icons.dangerous_outlined,),
+                            ],
+                          )
+                        ),
                       ],
-                    )
+                    ),
+                    SizedBox(height:15),
+                    Container(
+                      width: 300,
+                      height: 150,
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(height:20),
+                          Image(image: AssetImage('assets/images/samehadaku.png'),
+                            width: 200,height: 100,fit: BoxFit.fill,),
+                          TextButton(
+                              onPressed: () async{
+                                const url = 'https://samehadaku.day/';
+                                if (await canLaunch(url)) {
+                                  await launch(url, forceWebView: true, enableJavaScript: true);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: Text("Samehadaku",style: TextStyle(
+                                color: Colors.white
+                              ),)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height:15),
+                    Container(
+                      width: 300,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(height:20),
+                          Image(image: AssetImage('assets/images/otakudesu.png'),
+                            width: 200,height: 100,fit: BoxFit.fill,),
+                          TextButton(
+                              onPressed: () async{
+                                const url = 'https://otakudesu.lol/';
+                                if (await canLaunch(url)) {
+                                  await launch(url, forceWebView: true, enableJavaScript: true);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: Text("Otakudesu",style: TextStyle(
+                                color: Colors.white
+                              ),
+                              )),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height:15),
+                    Container(
+                      width: 300,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(height:20),
+                          Image(image: AssetImage('assets/images/anibatch.png'),
+                            width: 200,height: 100,fit: BoxFit.fill,),
+                          TextButton(
+                              onPressed: () async{
+                                const url = 'https://anibatch.anibatch.moe/';
+                                if (await canLaunch(url)) {
+                                  await launch(url, forceWebView: true, enableJavaScript: true);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: Text("Anibatch",style: TextStyle(
+                                  color: Colors.white
+                              ),)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height:15),
+                    Container(
+                      width: 300,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(height:20),
+                          Image(image: AssetImage('assets/images/animeindo.png'),
+                            width: 200,height: 100,fit: BoxFit.fill,),
+                          TextButton(
+                              onPressed: () async{
+                                const url = 'https://185.224.82.193/';
+                                if (await canLaunch(url)) {
+                                  await launch(url, forceWebView: true, enableJavaScript: true);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: Text("AnimeIndo",style: TextStyle(
+                                  color: Colors.white
+                              ),)),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              SizedBox(height:20),
+              Container(
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                            width: 300,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(20)
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text("Legal Sites", style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                ),),
+                                SizedBox(width:15),
+                                Icon(Icons.check,),
+                              ],
+                            )
+                        ),
+                      ],
+                    ),
+                    SizedBox(height:20),
+                    Container(
+                      width: 300,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(height:20),
+                          Image(image: AssetImage('assets/images/bstation.png'),
+                            width: 200,height: 100,fit: BoxFit.fill,),
+                          TextButton(
+                              onPressed: () async{
+                                const url = 'https://www.bilibili.tv/id/anime';
+                                if (await canLaunch(url)) {
+                                  await launch(url, forceWebView: true, enableJavaScript: true);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: Text("BStation",style: TextStyle(
+                                  color: Colors.white
+                              ),)),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height:15),
+                    Container(
+                      width: 300,
+                      height: 150,
+                      decoration: BoxDecoration(
+                          color: Colors.grey,
+                          borderRadius: BorderRadius.circular(20)
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(height:20),
+                          Image(image: AssetImage('assets/images/museindonesia.png'),
+                            width: 200,height: 100,fit: BoxFit.fill,),
+                          TextButton(
+                              onPressed: () async{
+                                const url = 'https://www.youtube.com/@MuseIndonesia';
+                                if (await canLaunch(url)) {
+                                  await launch(url, forceWebView: true, enableJavaScript: true);
+                                } else {
+                                  throw 'Could not launch $url';
+                                }
+                              },
+                              child: Text("Muse Indonesia",style: TextStyle(
+                                  color: Colors.white
+                              ),)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-        )
+        ),
+      ),
     );
   }
 }

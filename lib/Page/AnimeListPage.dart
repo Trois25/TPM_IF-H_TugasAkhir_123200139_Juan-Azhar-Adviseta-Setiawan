@@ -62,6 +62,11 @@ class _AnimeListState extends State<AnimeList> {
   }
 
   Widget build(BuildContext context) {
+    if(listResponserecomendation == null){
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Container(
       child: ListView(
         children: [

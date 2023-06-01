@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fp_tpm_animelist/MainPage.dart';
+import 'package:fp_tpm_animelist/login_page.dart';
 
 //Hive
 import 'package:hive/hive.dart';
@@ -8,9 +9,7 @@ import 'package:fp_tpm_animelist/model/loginModel.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized(); //to use hive
-
   await Hive.initFlutter(); //init flutter
-
   Hive.registerAdapter(loginDataAdapter()); //daftarin yang .g
   await Hive.openBox<loginData>('loginModel'); //membuka hive
 

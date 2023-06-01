@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -40,27 +41,37 @@ class _DetailAnimeState extends State<DetailAnime> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Anime Detail"),
+        title: Text(mapResponsedetail!['data']['title']),
       ),
       body: _detailAnime(),
     );
   }
 
   Widget _detailAnime(){
-    return ListView(
-      children: [
-        Center(
-        child: Column(
+    if(mapResponsedetail == null){
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.grey
+      ),
+      child: ListView(
         children: [
-            _imageAnime(),
-            SizedBox(height: 20,),
-            _detailAnimedesc(),
-            SizedBox(height: 20,),
-            _animesynopsis()
+          Center(
+          child: Column(
+          children: [
+              _imageAnime(),
+              SizedBox(height: 20,),
+              _detailAnimedesc(),
+              SizedBox(height: 20,),
+              _animesynopsis()
+          ],
+          ),
+          )
         ],
-        ),
-        )
-      ],
+      ),
     );
   }
 
@@ -71,13 +82,25 @@ class _DetailAnimeState extends State<DetailAnime> {
   }
   
   Widget _detailAnimedesc(){
+    if(mapResponsedetail == null){
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Container(
         child: Column(
           children: [
             Container(
+              child: Text(mapResponsedetail!['data']['title'],style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold
+              ),),
+            ),
+            SizedBox(height: 15,),
+            Container(
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(width: 200,),
                   Text(mapResponsedetail!['data']['rating'].toString()),
                   SizedBox(width: 50,),
                   Text(mapResponsedetail!['data']['type']),
@@ -103,7 +126,7 @@ class _DetailAnimeState extends State<DetailAnime> {
       child: Column(
         children: [
           Text("Synopsis"),
-          SizedBox(height: 20,),
+          SizedBox(height: 15,),
           Text(mapResponsedetail!['data']['synopsis'])
         ],
       ),

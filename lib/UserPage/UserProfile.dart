@@ -21,9 +21,13 @@ class _ProfileState extends State<Profile> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                child: Image.asset('assets/images/profile.jpg',
-                  height: 200,),
+              ClipOval(
+               child: Image(
+                 width: 250,
+                 height: 250,
+                 image: AssetImage('assets/images/profile.jpg'),
+                   fit: BoxFit.cover,
+               ),
               ),
               Container(
                 padding: EdgeInsets.all(15.0),

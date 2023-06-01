@@ -34,6 +34,11 @@ class _nextSeasonListState extends State<nextSeasonList> {
   }
 
   Widget build(BuildContext context) {
+    if(listResponsenextseason == null){
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
@@ -49,32 +54,11 @@ class _nextSeasonListState extends State<nextSeasonList> {
                       builder: (context)=>
                           DetailAnime(idAnime : listResponsenextseason![index]['mal_id'].toString())));
                 },
-                child: Row(
-                  children: [
-                    SizedBox(width: 20,),
-                    Container(
-                      child: Image.network(listResponsenextseason![index]['images']['webp']['image_url'],height: 100,fit: BoxFit.fill,),
-                    ),
-                    SizedBox(width: 20,),
-                    Container(
-                      child: Column(
-                        children: [
-                          Container(
-                            child: Text(listResponsenextseason![index]['title']),
-                          ),
-                          Container(
-                            child: Row(
-                              children: [
-                                Text("Score"),
-                                Text(listResponsenextseason![index]['score'].toString())
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                child: ListTile(
+                  leading: Image.network(listResponsenextseason![index]['images']['webp']['image_url'],height: 100,fit: BoxFit.fill,),
+                  title: Text(listResponsenextseason![index]['title']),
+                  subtitle: Text('Score : ' + listResponsenextseason![index]['score'].toString()),
+                )
               ),
             );
           }

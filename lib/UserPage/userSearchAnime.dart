@@ -1,59 +1,102 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class KonversiUang extends StatefulWidget {
-  const KonversiUang({Key? key}) : super(key: key);
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class SearchAnime extends StatefulWidget {
+  const SearchAnime({Key? key}) : super(key: key);
 
   @override
-  State<KonversiUang> createState() => _KonversiUangState();
+  State<SearchAnime> createState() => _SearchAnimeState();
 }
 
-class _KonversiUangState extends State<KonversiUang> {
+class _SearchAnimeState extends State<SearchAnime> {
 
-  final inputcontroller = TextEditingController();
+  Map? mapResponserank;
+  List? listResponserank;
+  List<dynamic> Anime = [];
+  List<dynamic> filteredAnime = [];
 
-  double dollar = 0, yen = 0, ringgit = 0;
+  Future apicallAnimerank()async{
+    http.Response response;
+    response = await http.get(Uri.parse("https://api.jikan.moe/v4/top/anime"));
+    if(response.statusCode == 200){
+      setState(() {
+        mapResponserank = json.decode(response.body);
+        listResponserank = mapResponserank!['data'];
+        Anime = jsonDecode(response.body)['data'];
+        filteredAnime = listResponserank!;
+      });
+    }
+  }
 
-  void calculate(){
-    double inputMoney = double.tryParse(inputcontroller.text)?? 0;
+
+  void updateAnime(String query) {
     setState(() {
-      dollar = inputMoney * 0.000067;
-      yen = inputMoney * 0.0092;
-      ringgit = inputMoney * 0.00030;
+      filteredAnime = Anime.where((animetitle) {
+        final name = animetitle['title'].toString().toLowerCase();
+        return name.contains(query.toLowerCase());
+      }).toList();
     });
   }
 
+
   @override
+
+  void initState(){
+    apicallAnimerank();
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
+    if(listResponserank == null){
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Scaffold(
+      backgroundColor: Colors.blueGrey,
       appBar: AppBar(
-        title: Text("Konversi Mata Uang Rupiah"),
+
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical:10 ,horizontal:20 ),
+        padding: EdgeInsets.all(15),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextFormField(
-              controller: inputcontroller,
-              keyboardType: TextInputType.number,
+            Text("Anime Search",style: TextStyle(
+              color:Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold
+            ),),
+            SizedBox(height:15),
+            TextField(
+              onChanged: (value) => updateAnime(value),
+              style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                  labelText: 'Input rupiah',
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  )
+                filled: true,
+                fillColor: Colors.grey,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide.none
+                ),
+                hintText: "Input Anime Title",
+                prefixIcon: Icon(Icons.search, color: Colors.white,),
               ),
             ),
-            SizedBox(height: 15),
-            ElevatedButton(
-                onPressed: calculate,
-                child: Text('Konversi')
-            ),
-            SizedBox(height: 15),
-            Text('Dollar : $dollar'),
-            SizedBox(height: 15),
-            Text('yen : $yen'),
-            SizedBox(height: 15),
-            Text('Ringgit : $ringgit')
+            SizedBox(height:20),
+            Expanded(child: ListView.builder(
+              itemCount: filteredAnime.length,
+              itemBuilder: (context,index) => ListTile(
+                leading: Image.network(filteredAnime[index]['images']['webp']['image_url'],height: 100,fit: BoxFit.fill,),
+                title: Text(filteredAnime[index]['title']),
+                subtitle: Text('Episodes : ' + filteredAnime[index]['episodes'].toString()),
+                trailing: Text(filteredAnime[index]['score'].toString(),
+                style: TextStyle(color: Colors.amber),),
+              )
+            ))
           ],
         ),
       ),

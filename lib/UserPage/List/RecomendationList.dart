@@ -37,6 +37,11 @@ class _RecomendationListState extends State<RecomendationList> {
   }
 
   Widget build(BuildContext context) {
+    if(listResponserecomendation == null){
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.grey,
       appBar: AppBar(
@@ -52,27 +57,11 @@ class _RecomendationListState extends State<RecomendationList> {
                       builder: (context)=>
                           DetailAnime(idAnime : listResponserecomendation![index]['mal_id'].toString())));
                 },
-                child: Row(
-                  children: [
-                    SizedBox(width: 20,),
-                    Container(
-                      child: Image.network(listResponserecomendation![index]['images']['webp']['image_url'],height: 100,fit: BoxFit.fill,),
-                    ),
-                    SizedBox(width: 20,),
-                    Container(
-                      child: Column(
-                        children: [
-                          Container(
-                            child: Text(listResponserecomendation![index]['title'], textAlign: TextAlign.left,),
-                          ),
-                          Container(
-                            child: Text("Episodes : " + listResponserecomendation![index]['episodes'].toString(),textAlign: TextAlign.left,),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                child: ListTile(
+                  leading: Image.network(listResponserecomendation![index]['images']['webp']['image_url'],height: 100,fit: BoxFit.fill,),
+                  title: Text(listResponserecomendation![index]['title'], textAlign: TextAlign.left,),
+                  subtitle: Text("Score : " + listResponserecomendation![index]['score'].toString(),textAlign: TextAlign.left,),
+                )
               ),
             );
           }

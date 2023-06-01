@@ -1,13 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:fp_tpm_animelist/MainPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fp_tpm_animelist/login_page.dart';
 import 'package:hive/hive.dart';
 
-class userLogout extends StatelessWidget {
+class userLogout extends StatefulWidget {
   const userLogout({Key? key}) : super(key: key);
 
   @override
+  State<userLogout> createState() => _userLogoutState();
+}
+
+class _userLogoutState extends State<userLogout> {
+
+  late SharedPreferences prefs;
+
+  void initState(){
+    super.initState();
+    Initial();
+  }
+
+  void Initial() async{
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  @override
   Widget build(BuildContext context) {
-      Hive.close();
+    Hive.close();
     return Scaffold(
       appBar: AppBar(
         title: Text("Logout"),
@@ -27,6 +46,8 @@ class userLogout extends StatelessWidget {
             child: Center(
               child: ElevatedButton(
                   onPressed: () {
+                    prefs.remove("username");
+                    //logindata!.setBool('login', true);
                     Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
@@ -41,4 +62,10 @@ class userLogout extends StatelessWidget {
       ),
     );
   }
+
+  void logoutpref() async{
+    await prefs.remove("username");
+  }
+
 }
+

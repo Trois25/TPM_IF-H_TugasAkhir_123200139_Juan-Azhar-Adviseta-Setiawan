@@ -34,9 +34,15 @@ class _AnimeRankState extends State<AnimeRank> {
   }
 
   Widget build(BuildContext context) {
+    if(listResponserank == null){
+      return Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.grey,
       body: ListView.builder(
+          scrollDirection: Axis.vertical,
           itemCount: listResponserank!.length,
           itemBuilder:(context,index){
             return Card(
@@ -58,22 +64,23 @@ class _AnimeRankState extends State<AnimeRank> {
                     ),
                     SizedBox(width: 20,),
                     Container(
+                      width: 200,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            child: Text(listResponserank![index]['title']),
-                          ),
+                          Text(listResponserank![index]['title']),
                           Container(
                             child: Row(
-                              children: [
-                                Text("Score : "),
-                                Text(listResponserank![index]['score'].toString())
-                              ],
-                            ),
-                          )
+                                  children: [
+                                    Text("Score : "),
+                                    Text(listResponserank![index]['score'].toString(),textAlign: TextAlign.left,)
+                                  ],
+                                ),
+                          ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
