@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:fp_tpm_animelist/model/loginModel.dart';
+import 'package:fp_tpm_animelist/UserPage/userConvert.dart';
 import 'package:fp_tpm_animelist/boxes.dart';
+import 'package:intl/intl.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -12,6 +11,22 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
+  DateTime Date = DateTime.now();
+
+  List<DropdownMenuItem<String>> get dropdownItems{
+    List<DropdownMenuItem<String>> zone = [
+      DropdownMenuItem(child: Text("London"),value: "London"),
+      DropdownMenuItem(child: Text("WIB"),value: "WIB"),
+      DropdownMenuItem(child: Text("WITA"),value: "WITA"),
+      DropdownMenuItem(child: Text("WIT"),value: "WIT"),
+    ];
+    return zone;
+  }
+
+  String selectedZone = "London";
+  int hours = 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +64,48 @@ class _ProfileState extends State<Profile> {
               Container(
                 child: Text("Account : "),
               ),
-              _accountuname()
+              _accountuname(),
+              SizedBox(height: 20,),
+              Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          "${DateFormat().format(Date.toUtc().add(Duration(hours: hours)))} $selectedZone"
+                      ),
+                      SizedBox(width: 15,),
+                      DropdownButton(
+                          value: selectedZone,
+                          onChanged: (String? newZone){
+                            setState(() {
+                              selectedZone = newZone!;
+                              if(selectedZone == "WITA"){
+                                hours = 8;
+                              }else if (selectedZone == "WIT"){
+                                hours = 9;
+                              }else if (selectedZone == "WIB"){
+                                hours = 7;
+                              }else{
+                                hours = 1;
+                              }
+                            });
+                          },
+                          items: dropdownItems
+                      ),
+
+                    ],
+                  )
+              ),
+              SizedBox(height: 15,),
+              Container(
+                child: ElevatedButton(
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (context)=>userConverter()));
+                  },
+                  child: Text("Money Conversion"),
+                ),
+              )
             ],
           ),
         ),
